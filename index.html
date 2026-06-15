@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MatchZone26 🏆</title>
+<title>MatchZone26 ð</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -133,25 +133,25 @@
 <body>
 
 <header>
-  <div class="trophy">🏆</div>
+  <div class="trophy">ð</div>
   <h1>MatchZone26</h1>
-  <p>11 Junho – 19 Julho · EUA, México & Canadá</p>
+  <p>11 Junho â 19 Julho Â· EUA, MÃ©xico & CanadÃ¡</p>
   <div class="live-indicator"><span class="live-dot"></span> Resultados ao vivo</div>
 </header>
 
 <div id="api-banner">
-  ⚽ API: <a href="https://www.thesportsdb.com" target="_blank">TheSportsDB</a>
-  &nbsp;·&nbsp; Estado: <span id="api-status" class="status-loading">A ligar...</span>
-  &nbsp;·&nbsp; <span id="last-update">–</span>
+  â½ API: <a href="https://www.thesportsdb.com" target="_blank">TheSportsDB</a>
+  &nbsp;Â·&nbsp; Estado: <span id="api-status" class="status-loading">A ligar...</span>
+  &nbsp;Â·&nbsp; <span id="last-update">â</span>
 </div>
 
 <div class="filters">
   <button class="pill active" onclick="setFilter('todos',this)">Todos</button>
-  <button class="pill" onclick="setFilter('hoje',this)">📅 Hoje</button>
-  <button class="pill" onclick="setFilter('portugal',this)">🇵🇹 Portugal</button>
-  <button class="pill" onclick="setFilter('aberto',this)">📺 TV Aberta</button>
-  <button class="pill" onclick="setFilter('classificacao',this)">📊 Classificação</button>
-  <button class="pill" onclick="setFilter('eliminatoria',this)">⚔️ Eliminatórias</button>
+  <button class="pill" onclick="setFilter('hoje',this)">ð Hoje</button>
+  <button class="pill" onclick="setFilter('portugal',this)">ðµð¹ Portugal</button>
+  <button class="pill" onclick="setFilter('aberto',this)">ðº TV Aberta</button>
+  <button class="pill" onclick="setFilter('classificacao',this)">ð ClassificaÃ§Ã£o</button>
+  <button class="pill" onclick="setFilter('eliminatoria',this)">âï¸ EliminatÃ³rias</button>
 </div>
 
 <div class="tv-legend">
@@ -167,120 +167,120 @@
 <div class="last-updated" id="footer-update"></div>
 
 <script>
-// ═══════════════════════════════════════════
-//  CONFIG — coloca aqui a tua chave da API
-//  Registo grátis em: football-data.org/client/register
-// ═══════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââ
+//  CONFIG â coloca aqui a tua chave da API
+//  Registo grÃ¡tis em: football-data.org/client/register
+// âââââââââââââââââââââââââââââââââââââââââââ
 const API_KEY = '0badbb04d9b54a41a4b5ecfa650db3a1'; // substitui por ex: 'abc123def456...'
 const WC_ID = 2000; // FIFA World Cup 2026 competition ID
 
-// ═══════════════════════════════════════════
-//  DADOS LOCAIS (calendário + TV)
-//  Usados quando a API não está configurada
-// ═══════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââ
+//  DADOS LOCAIS (calendÃ¡rio + TV)
+//  Usados quando a API nÃ£o estÃ¡ configurada
+// âââââââââââââââââââââââââââââââââââââââââââ
 const LOCAL_MATCHES = [
-  { date: "Qui 11 Jun", time: "20h", group: "A", home: "México", away: "África do Sul", city: "C. do México", tv: ["TVI","LV","SPTV"] },
+  { date: "Qui 11 Jun", time: "20h", group: "A", home: "MÃ©xico", away: "Ãfrica do Sul", city: "C. do MÃ©xico", tv: ["TVI","LV","SPTV"] },
   { date: "Sex 12 Jun", time: "03h", group: "A", home: "Coreia do Sul", away: "Rep. Checa", city: "Guadalajara", tv: ["SPTV"] },
-  { date: "Sex 12 Jun", time: "20h", group: "B", home: "Canadá", away: "Bósnia-Herz.", city: "Toronto", tv: ["SIC","LV","SPTV"] },
-  { date: "Sáb 13 Jun", time: "02h", group: "D", home: "EUA", away: "Paraguai", city: "Los Angeles", tv: ["SPTV"] },
-  { date: "Sáb 13 Jun", time: "20h", group: "B", home: "Qatar", away: "Suíça", city: "S. Francisco", tv: ["SPTV"] },
-  { date: "Sáb 13 Jun", time: "23h", group: "C", home: "Brasil", away: "Marrocos", city: "Nova Iorque", tv: ["LV","SPTV"] },
-  { date: "Dom 14 Jun", time: "02h", group: "C", home: "Haiti", away: "Escócia", city: "Boston", tv: ["SPTV"] },
-  { date: "Dom 14 Jun", time: "17h", group: "D", home: "Austrália", away: "Turquia", city: "Vancôver", tv: ["SPTV"] },
-  { date: "Dom 14 Jun", time: "18h", group: "E", home: "Alemanha", away: "Curaçau", city: "Houston", tv: ["LV","SPTV"] },
-  { date: "Dom 14 Jun", time: "21h", group: "F", home: "Países Baixos", away: "Japão", city: "Dallas", tv: ["SPTV"] },
-  { date: "Seg 15 Jun", time: "00h", group: "E", home: "C. do Marfim", away: "Equador", city: "Filadélfia", tv: ["SPTV"] },
-  { date: "Seg 15 Jun", time: "03h", group: "F", home: "Suécia", away: "Tunísia", city: "Monterrey", tv: ["SPTV"] },
+  { date: "Sex 12 Jun", time: "20h", group: "B", home: "CanadÃ¡", away: "BÃ³snia-Herz.", city: "Toronto", tv: ["SIC","LV","SPTV"] },
+  { date: "SÃ¡b 13 Jun", time: "02h", group: "D", home: "EUA", away: "Paraguai", city: "Los Angeles", tv: ["SPTV"] },
+  { date: "SÃ¡b 13 Jun", time: "20h", group: "B", home: "Qatar", away: "SuÃ­Ã§a", city: "S. Francisco", tv: ["SPTV"] },
+  { date: "SÃ¡b 13 Jun", time: "23h", group: "C", home: "Brasil", away: "Marrocos", city: "Nova Iorque", tv: ["LV","SPTV"] },
+  { date: "Dom 14 Jun", time: "02h", group: "C", home: "Haiti", away: "EscÃ³cia", city: "Boston", tv: ["SPTV"] },
+  { date: "Dom 14 Jun", time: "17h", group: "D", home: "AustrÃ¡lia", away: "Turquia", city: "VancÃ´ver", tv: ["SPTV"] },
+  { date: "Dom 14 Jun", time: "18h", group: "E", home: "Alemanha", away: "CuraÃ§au", city: "Houston", tv: ["LV","SPTV"] },
+  { date: "Dom 14 Jun", time: "21h", group: "F", home: "PaÃ­ses Baixos", away: "JapÃ£o", city: "Dallas", tv: ["SPTV"] },
+  { date: "Seg 15 Jun", time: "00h", group: "E", home: "C. do Marfim", away: "Equador", city: "FiladÃ©lfia", tv: ["SPTV"] },
+  { date: "Seg 15 Jun", time: "03h", group: "F", home: "SuÃ©cia", away: "TunÃ­sia", city: "Monterrey", tv: ["SPTV"] },
   { date: "Seg 15 Jun", time: "17h", group: "H", home: "Espanha", away: "Cabo Verde", city: "Atlanta", tv: ["LV","SPTV"] },
-  { date: "Seg 15 Jun", time: "20h", group: "G", home: "Bélgica", away: "Egipto", city: "Seattle", tv: ["SPTV"] },
+  { date: "Seg 15 Jun", time: "20h", group: "G", home: "BÃ©lgica", away: "Egipto", city: "Seattle", tv: ["SPTV"] },
   { date: "Seg 15 Jun", time: "23h", group: "H", home: "A. Saudita", away: "Uruguai", city: "Miami", tv: ["SPTV"] },
-  { date: "Ter 16 Jun", time: "02h", group: "G", home: "Irão", away: "Nova Zelândia", city: "Los Angeles", tv: ["SPTV"] },
-  { date: "Ter 16 Jun", time: "20h", group: "I", home: "França", away: "Senegal", city: "Nova Iorque", tv: ["RTP1","LV","SPTV"] },
+  { date: "Ter 16 Jun", time: "02h", group: "G", home: "IrÃ£o", away: "Nova ZelÃ¢ndia", city: "Los Angeles", tv: ["SPTV"] },
+  { date: "Ter 16 Jun", time: "20h", group: "I", home: "FranÃ§a", away: "Senegal", city: "Nova Iorque", tv: ["RTP1","LV","SPTV"] },
   { date: "Ter 16 Jun", time: "23h", group: "I", home: "Iraque", away: "Noruega", city: "Boston", tv: ["SPTV"] },
-  { date: "Qua 17 Jun", time: "02h", group: "J", home: "Argentina", away: "Argélia", city: "Kansas City", tv: ["SPTV"] },
-  { date: "Qua 17 Jun", time: "05h", group: "J", home: "Áustria", away: "Jordânia", city: "S. Francisco", tv: ["SPTV"] },
+  { date: "Qua 17 Jun", time: "02h", group: "J", home: "Argentina", away: "ArgÃ©lia", city: "Kansas City", tv: ["SPTV"] },
+  { date: "Qua 17 Jun", time: "05h", group: "J", home: "Ãustria", away: "JordÃ¢nia", city: "S. Francisco", tv: ["SPTV"] },
   { date: "Qua 17 Jun", time: "18h", group: "K", home: "Portugal", away: "RD Congo", city: "Houston", tv: ["SIC","LV","SPTV"], portugal: true },
-  { date: "Qua 17 Jun", time: "21h", group: "L", home: "Inglaterra", away: "Croácia", city: "Dallas", tv: ["SPTV"] },
-  { date: "Qui 18 Jun", time: "00h", group: "L", home: "Gana", away: "Panamá", city: "Toronto", tv: ["SPTV"] },
-  { date: "Qui 18 Jun", time: "03h", group: "K", home: "Uzbequistão", away: "Colômbia", city: "C. do México", tv: ["SPTV"] },
-  { date: "Qui 18 Jun", time: "17h", group: "A", home: "Rep. Checa", away: "África do Sul", city: "Atlanta", tv: ["SPTV"] },
-  { date: "Qui 18 Jun", time: "20h", group: "B", home: "Suíça", away: "Bósnia-Herz.", city: "Los Angeles", tv: ["RTP1","LV","SPTV"] },
-  { date: "Qui 18 Jun", time: "23h", group: "B", home: "Canadá", away: "Qatar", city: "S. Francisco", tv: ["SPTV"] },
-  { date: "Sex 19 Jun", time: "02h", group: "A", home: "México", away: "Coreia do Sul", city: "Guadalajara", tv: ["SPTV"] },
-  { date: "Sex 19 Jun", time: "20h", group: "D", home: "EUA", away: "Austrália", city: "Seattle", tv: ["SPTV"] },
-  { date: "Sex 19 Jun", time: "23h", group: "C", home: "Escócia", away: "Marrocos", city: "Boston", tv: ["SPTV"] },
-  { date: "Sáb 20 Jun", time: "01h30", group: "C", home: "Brasil", away: "Haiti", city: "Filadélfia", tv: ["LV","SPTV"] },
-  { date: "Sáb 20 Jun", time: "04h", group: "D", home: "Turquia", away: "Paraguai", city: "S. Francisco", tv: ["SPTV"] },
-  { date: "Sáb 20 Jun", time: "18h", group: "F", home: "Países Baixos", away: "Suécia", city: "Houston", tv: ["SPTV"] },
-  { date: "Sáb 20 Jun", time: "21h", group: "E", home: "Alemanha", away: "C. do Marfim", city: "Toronto", tv: ["TVI","LV","SPTV"] },
-  { date: "Dom 21 Jun", time: "01h", group: "E", home: "Equador", away: "Curaçau", city: "Kansas City", tv: ["SPTV"] },
-  { date: "Dom 21 Jun", time: "05h", group: "F", home: "Tunísia", away: "Japão", city: "Monterrey", tv: ["SPTV"] },
+  { date: "Qua 17 Jun", time: "21h", group: "L", home: "Inglaterra", away: "CroÃ¡cia", city: "Dallas", tv: ["SPTV"] },
+  { date: "Qui 18 Jun", time: "00h", group: "L", home: "Gana", away: "PanamÃ¡", city: "Toronto", tv: ["SPTV"] },
+  { date: "Qui 18 Jun", time: "03h", group: "K", home: "UzbequistÃ£o", away: "ColÃ´mbia", city: "C. do MÃ©xico", tv: ["SPTV"] },
+  { date: "Qui 18 Jun", time: "17h", group: "A", home: "Rep. Checa", away: "Ãfrica do Sul", city: "Atlanta", tv: ["SPTV"] },
+  { date: "Qui 18 Jun", time: "20h", group: "B", home: "SuÃ­Ã§a", away: "BÃ³snia-Herz.", city: "Los Angeles", tv: ["RTP1","LV","SPTV"] },
+  { date: "Qui 18 Jun", time: "23h", group: "B", home: "CanadÃ¡", away: "Qatar", city: "S. Francisco", tv: ["SPTV"] },
+  { date: "Sex 19 Jun", time: "02h", group: "A", home: "MÃ©xico", away: "Coreia do Sul", city: "Guadalajara", tv: ["SPTV"] },
+  { date: "Sex 19 Jun", time: "20h", group: "D", home: "EUA", away: "AustrÃ¡lia", city: "Seattle", tv: ["SPTV"] },
+  { date: "Sex 19 Jun", time: "23h", group: "C", home: "EscÃ³cia", away: "Marrocos", city: "Boston", tv: ["SPTV"] },
+  { date: "SÃ¡b 20 Jun", time: "01h30", group: "C", home: "Brasil", away: "Haiti", city: "FiladÃ©lfia", tv: ["LV","SPTV"] },
+  { date: "SÃ¡b 20 Jun", time: "04h", group: "D", home: "Turquia", away: "Paraguai", city: "S. Francisco", tv: ["SPTV"] },
+  { date: "SÃ¡b 20 Jun", time: "18h", group: "F", home: "PaÃ­ses Baixos", away: "SuÃ©cia", city: "Houston", tv: ["SPTV"] },
+  { date: "SÃ¡b 20 Jun", time: "21h", group: "E", home: "Alemanha", away: "C. do Marfim", city: "Toronto", tv: ["TVI","LV","SPTV"] },
+  { date: "Dom 21 Jun", time: "01h", group: "E", home: "Equador", away: "CuraÃ§au", city: "Kansas City", tv: ["SPTV"] },
+  { date: "Dom 21 Jun", time: "05h", group: "F", home: "TunÃ­sia", away: "JapÃ£o", city: "Monterrey", tv: ["SPTV"] },
   { date: "Dom 21 Jun", time: "17h", group: "H", home: "Espanha", away: "A. Saudita", city: "Atlanta", tv: ["LV","SPTV"] },
-  { date: "Dom 21 Jun", time: "20h", group: "G", home: "Bélgica", away: "Irão", city: "Los Angeles", tv: ["SPTV"] },
+  { date: "Dom 21 Jun", time: "20h", group: "G", home: "BÃ©lgica", away: "IrÃ£o", city: "Los Angeles", tv: ["SPTV"] },
   { date: "Dom 21 Jun", time: "23h", group: "H", home: "Uruguai", away: "Cabo Verde", city: "Miami", tv: ["SPTV"] },
-  { date: "Seg 22 Jun", time: "02h", group: "G", home: "Nova Zelândia", away: "Egipto", city: "Vancôver", tv: ["SPTV"] },
-  { date: "Seg 22 Jun", time: "18h", group: "J", home: "Argentina", away: "Áustria", city: "Dallas", tv: ["LV","SPTV"] },
-  { date: "Seg 22 Jun", time: "22h", group: "I", home: "França", away: "Iraque", city: "Filadélfia", tv: ["SPTV"] },
+  { date: "Seg 22 Jun", time: "02h", group: "G", home: "Nova ZelÃ¢ndia", away: "Egipto", city: "VancÃ´ver", tv: ["SPTV"] },
+  { date: "Seg 22 Jun", time: "18h", group: "J", home: "Argentina", away: "Ãustria", city: "Dallas", tv: ["LV","SPTV"] },
+  { date: "Seg 22 Jun", time: "22h", group: "I", home: "FranÃ§a", away: "Iraque", city: "FiladÃ©lfia", tv: ["SPTV"] },
   { date: "Ter 23 Jun", time: "01h", group: "I", home: "Noruega", away: "Senegal", city: "Nova Iorque", tv: ["SPTV"] },
-  { date: "Ter 23 Jun", time: "04h", group: "J", home: "Jordânia", away: "Argélia", city: "S. Francisco", tv: ["SPTV"] },
-  { date: "Ter 23 Jun", time: "18h", group: "K", home: "Portugal", away: "Uzbequistão", city: "Houston", tv: ["TVI","LV","SPTV"], portugal: true },
+  { date: "Ter 23 Jun", time: "04h", group: "J", home: "JordÃ¢nia", away: "ArgÃ©lia", city: "S. Francisco", tv: ["SPTV"] },
+  { date: "Ter 23 Jun", time: "18h", group: "K", home: "Portugal", away: "UzbequistÃ£o", city: "Houston", tv: ["TVI","LV","SPTV"], portugal: true },
   { date: "Ter 23 Jun", time: "21h", group: "L", home: "Inglaterra", away: "Gana", city: "Boston", tv: ["SPTV"] },
-  { date: "Qua 24 Jun", time: "00h", group: "L", home: "Panamá", away: "Croácia", city: "Toronto", tv: ["SPTV"] },
-  { date: "Qua 24 Jun", time: "03h", group: "K", home: "Colômbia", away: "RD Congo", city: "Guadalajara", tv: ["SPTV"] },
-  { date: "Qua 24 Jun", time: "20h", group: "B", home: "Suíça", away: "Canadá", city: "Vancôver", tv: ["SPTV"] },
-  { date: "Qua 24 Jun", time: "20h", group: "B", home: "Bósnia-Herz.", away: "Qatar", city: "Seattle", tv: ["SPTV"] },
-  { date: "Qua 24 Jun", time: "23h", group: "C", home: "Escócia", away: "Brasil", city: "Miami", tv: ["LV","SPTV"] },
+  { date: "Qua 24 Jun", time: "00h", group: "L", home: "PanamÃ¡", away: "CroÃ¡cia", city: "Toronto", tv: ["SPTV"] },
+  { date: "Qua 24 Jun", time: "03h", group: "K", home: "ColÃ´mbia", away: "RD Congo", city: "Guadalajara", tv: ["SPTV"] },
+  { date: "Qua 24 Jun", time: "20h", group: "B", home: "SuÃ­Ã§a", away: "CanadÃ¡", city: "VancÃ´ver", tv: ["SPTV"] },
+  { date: "Qua 24 Jun", time: "20h", group: "B", home: "BÃ³snia-Herz.", away: "Qatar", city: "Seattle", tv: ["SPTV"] },
+  { date: "Qua 24 Jun", time: "23h", group: "C", home: "EscÃ³cia", away: "Brasil", city: "Miami", tv: ["LV","SPTV"] },
   { date: "Qua 24 Jun", time: "23h", group: "C", home: "Marrocos", away: "Haiti", city: "Atlanta", tv: ["SPTV"] },
-  { date: "Qui 25 Jun", time: "02h", group: "A", home: "Rep. Checa", away: "México", city: "C. do México", tv: ["SPTV"] },
-  { date: "Qui 25 Jun", time: "02h", group: "A", home: "África do Sul", away: "Coreia do Sul", city: "Monterrey", tv: ["SPTV"] },
-  { date: "Qui 25 Jun", time: "21h", group: "E", home: "Curaçau", away: "C. do Marfim", city: "Filadélfia", tv: ["SPTV"] },
+  { date: "Qui 25 Jun", time: "02h", group: "A", home: "Rep. Checa", away: "MÃ©xico", city: "C. do MÃ©xico", tv: ["SPTV"] },
+  { date: "Qui 25 Jun", time: "02h", group: "A", home: "Ãfrica do Sul", away: "Coreia do Sul", city: "Monterrey", tv: ["SPTV"] },
+  { date: "Qui 25 Jun", time: "21h", group: "E", home: "CuraÃ§au", away: "C. do Marfim", city: "FiladÃ©lfia", tv: ["SPTV"] },
   { date: "Qui 25 Jun", time: "21h", group: "E", home: "Equador", away: "Alemanha", city: "Nova Iorque", tv: ["SIC","LV","SPTV"] },
-  { date: "Sex 26 Jun", time: "00h", group: "F", home: "Japão", away: "Suécia", city: "Dallas", tv: ["SPTV"] },
-  { date: "Sex 26 Jun", time: "00h", group: "F", home: "Tunísia", away: "Países Baixos", city: "Kansas City", tv: ["SPTV"] },
+  { date: "Sex 26 Jun", time: "00h", group: "F", home: "JapÃ£o", away: "SuÃ©cia", city: "Dallas", tv: ["SPTV"] },
+  { date: "Sex 26 Jun", time: "00h", group: "F", home: "TunÃ­sia", away: "PaÃ­ses Baixos", city: "Kansas City", tv: ["SPTV"] },
   { date: "Sex 26 Jun", time: "03h", group: "D", home: "Turquia", away: "EUA", city: "Los Angeles", tv: ["SPTV"] },
-  { date: "Sex 26 Jun", time: "03h", group: "D", home: "Paraguai", away: "Austrália", city: "S. Francisco", tv: ["SPTV"] },
-  { date: "Sex 26 Jun", time: "20h", group: "I", home: "Noruega", away: "França", city: "Boston", tv: ["TVI","LV","SPTV"] },
+  { date: "Sex 26 Jun", time: "03h", group: "D", home: "Paraguai", away: "AustrÃ¡lia", city: "S. Francisco", tv: ["SPTV"] },
+  { date: "Sex 26 Jun", time: "20h", group: "I", home: "Noruega", away: "FranÃ§a", city: "Boston", tv: ["TVI","LV","SPTV"] },
   { date: "Sex 26 Jun", time: "20h", group: "I", home: "Senegal", away: "Iraque", city: "Toronto", tv: ["SPTV"] },
-  { date: "Sáb 27 Jun", time: "01h", group: "H", home: "Cabo Verde", away: "A. Saudita", city: "Houston", tv: ["SPTV"] },
-  { date: "Sáb 27 Jun", time: "01h", group: "H", home: "Uruguai", away: "Espanha", city: "Guadalajara", tv: ["SPTV"] },
-  { date: "Sáb 27 Jun", time: "04h", group: "G", home: "Egipto", away: "Irão", city: "Seattle", tv: ["SPTV"] },
-  { date: "Sáb 27 Jun", time: "04h", group: "G", home: "Nova Zelândia", away: "Bélgica", city: "Vancôver", tv: ["SPTV"] },
-  { date: "Sáb 27 Jun", time: "22h", group: "L", home: "Panamá", away: "Inglaterra", city: "Nova Iorque", tv: ["SPTV"] },
-  { date: "Sáb 27 Jun", time: "22h", group: "L", home: "Croácia", away: "Gana", city: "Filadélfia", tv: ["SPTV"] },
-  { date: "Dom 28 Jun", time: "00h30", group: "K", home: "Colômbia", away: "Portugal", city: "Miami", tv: ["RTP1","LV","SPTV"], portugal: true },
-  { date: "Dom 28 Jun", time: "00h30", group: "K", home: "RD Congo", away: "Uzbequistão", city: "Atlanta", tv: ["SPTV"] },
-  { date: "Dom 28 Jun", time: "03h", group: "J", home: "Argélia", away: "Áustria", city: "Kansas City", tv: ["SPTV"] },
-  { date: "Dom 28 Jun", time: "03h", group: "J", home: "Jordânia", away: "Argentina", city: "Dallas", tv: ["SPTV"] },
+  { date: "SÃ¡b 27 Jun", time: "01h", group: "H", home: "Cabo Verde", away: "A. Saudita", city: "Houston", tv: ["SPTV"] },
+  { date: "SÃ¡b 27 Jun", time: "01h", group: "H", home: "Uruguai", away: "Espanha", city: "Guadalajara", tv: ["SPTV"] },
+  { date: "SÃ¡b 27 Jun", time: "04h", group: "G", home: "Egipto", away: "IrÃ£o", city: "Seattle", tv: ["SPTV"] },
+  { date: "SÃ¡b 27 Jun", time: "04h", group: "G", home: "Nova ZelÃ¢ndia", away: "BÃ©lgica", city: "VancÃ´ver", tv: ["SPTV"] },
+  { date: "SÃ¡b 27 Jun", time: "22h", group: "L", home: "PanamÃ¡", away: "Inglaterra", city: "Nova Iorque", tv: ["SPTV"] },
+  { date: "SÃ¡b 27 Jun", time: "22h", group: "L", home: "CroÃ¡cia", away: "Gana", city: "FiladÃ©lfia", tv: ["SPTV"] },
+  { date: "Dom 28 Jun", time: "00h30", group: "K", home: "ColÃ´mbia", away: "Portugal", city: "Miami", tv: ["RTP1","LV","SPTV"], portugal: true },
+  { date: "Dom 28 Jun", time: "00h30", group: "K", home: "RD Congo", away: "UzbequistÃ£o", city: "Atlanta", tv: ["SPTV"] },
+  { date: "Dom 28 Jun", time: "03h", group: "J", home: "ArgÃ©lia", away: "Ãustria", city: "Kansas City", tv: ["SPTV"] },
+  { date: "Dom 28 Jun", time: "03h", group: "J", home: "JordÃ¢nia", away: "Argentina", city: "Dallas", tv: ["SPTV"] },
 ];
 
 const KNOCKOUT = [
   { phase: "16-avos-de-final", matches: [
-    { date: "28 Jun 20h", info: "1º A vs 2º B", city: "Los Angeles" },
-    { date: "29 Jun 18h", info: "1º C vs 2º F", city: "Houston" },
-    { date: "29 Jun 21h30", info: "1º E vs 3º A/B/C/D/F", city: "Boston" },
-    { date: "30 Jun 02h", info: "1º F vs 2º C", city: "Monterrey" },
-    { date: "30 Jun 02h", info: "2º K vs 2º L", city: "Toronto" },
-    { date: "30 Jun 18h", info: "2º E vs 2º I", city: "Dallas" },
-    { date: "30 Jun 22h", info: "1º I vs 3º C/D/F/G/H", city: "Nova Iorque" },
-    { date: "1 Jul 02h", info: "1º A vs 3º C/E/F/H/I", city: "C. do México" },
-    { date: "1 Jul 17h", info: "1º L vs 3º E/H/I/J/K", city: "Atlanta" },
-    { date: "1 Jul 18h", info: "1º G vs 3º A/E/H/I/J", city: "Seattle" },
-    { date: "2 Jul 01h", info: "1º D vs 3º B/E/F/I/J", city: "S. Francisco" },
-    { date: "2 Jul 20h", info: "1º H vs 2º J", city: "Los Angeles" },
-    { date: "3 Jul 04h", info: "1º B vs 3º E/F/G/I/J", city: "Vancôver" },
-    { date: "3 Jul 19h", info: "2º D vs 2º G", city: "Dallas" },
-    { date: "3 Jul 23h", info: "1º J vs 2º H", city: "Miami" },
-    { date: "4 Jul 02h30", info: "1º K vs 3º D/E/I/J/L", city: "Kansas City" },
+    { date: "28 Jun 20h", info: "1Âº A vs 2Âº B", city: "Los Angeles" },
+    { date: "29 Jun 18h", info: "1Âº C vs 2Âº F", city: "Houston" },
+    { date: "29 Jun 21h30", info: "1Âº E vs 3Âº A/B/C/D/F", city: "Boston" },
+    { date: "30 Jun 02h", info: "1Âº F vs 2Âº C", city: "Monterrey" },
+    { date: "30 Jun 02h", info: "2Âº K vs 2Âº L", city: "Toronto" },
+    { date: "30 Jun 18h", info: "2Âº E vs 2Âº I", city: "Dallas" },
+    { date: "30 Jun 22h", info: "1Âº I vs 3Âº C/D/F/G/H", city: "Nova Iorque" },
+    { date: "1 Jul 02h", info: "1Âº A vs 3Âº C/E/F/H/I", city: "C. do MÃ©xico" },
+    { date: "1 Jul 17h", info: "1Âº L vs 3Âº E/H/I/J/K", city: "Atlanta" },
+    { date: "1 Jul 18h", info: "1Âº G vs 3Âº A/E/H/I/J", city: "Seattle" },
+    { date: "2 Jul 01h", info: "1Âº D vs 3Âº B/E/F/I/J", city: "S. Francisco" },
+    { date: "2 Jul 20h", info: "1Âº H vs 2Âº J", city: "Los Angeles" },
+    { date: "3 Jul 04h", info: "1Âº B vs 3Âº E/F/G/I/J", city: "VancÃ´ver" },
+    { date: "3 Jul 19h", info: "2Âº D vs 2Âº G", city: "Dallas" },
+    { date: "3 Jul 23h", info: "1Âº J vs 2Âº H", city: "Miami" },
+    { date: "4 Jul 02h30", info: "1Âº K vs 3Âº D/E/I/J/L", city: "Kansas City" },
   ]},
   { phase: "Oitavos-de-final", matches: [
     { date: "4 Jul 18h", info: "A definir", city: "Houston" },
-    { date: "4 Jul 22h", info: "A definir", city: "Filadélfia" },
+    { date: "4 Jul 22h", info: "A definir", city: "FiladÃ©lfia" },
     { date: "5 Jul 21h", info: "A definir", city: "Nova Iorque" },
-    { date: "6 Jul 01h", info: "A definir", city: "C. do México" },
+    { date: "6 Jul 01h", info: "A definir", city: "C. do MÃ©xico" },
     { date: "6 Jul 20h", info: "A definir", city: "Dallas" },
     { date: "7 Jul 01h", info: "A definir", city: "Seattle" },
     { date: "7 Jul 17h", info: "A definir", city: "Atlanta" },
-    { date: "7 Jul 21h", info: "A definir", city: "Vancôver" },
+    { date: "7 Jul 21h", info: "A definir", city: "VancÃ´ver" },
   ]},
   { phase: "Quartos-de-final", matches: [
     { date: "9 Jul 21h", info: "A definir", city: "Boston" },
@@ -292,13 +292,13 @@ const KNOCKOUT = [
     { date: "14 Jul 20h", info: "A definir", city: "Dallas" },
     { date: "15 Jul 20h", info: "A definir", city: "Atlanta" },
   ]},
-  { phase: "🥉 3.º Lugar", matches: [{ date: "18 Jul 22h", info: "A definir", city: "Miami" }]},
-  { phase: "🏆 Final", matches: [{ date: "19 Jul 20h", info: "A definir", city: "Nova Iorque" }]},
+  { phase: "ð¥ 3.Âº Lugar", matches: [{ date: "18 Jul 22h", info: "A definir", city: "Miami" }]},
+  { phase: "ð Final", matches: [{ date: "19 Jul 20h", info: "A definir", city: "Nova Iorque" }]},
 ];
 
-// ═══════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââ
 //  STATE
-// ═══════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââ
 let currentFilter = 'todos';
 let apiMatches = null; // filled when API responds
 let apiStandings = null;
@@ -306,57 +306,43 @@ let apiError = false;
 
 const TODAY_PT = (() => {
   const d = new Date();
-  const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const days = ['Dom','Seg','Ter','Qua','Qui','Sex','SÃ¡b'];
   const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
 })();
 
-// ═══════════════════════════════════════════
-//  API
-// ═══════════════════════════════════════════
-async function fetchAPI(path) {
-  const res = await fetch(`https://api.football-data.org/v4/${path}`, {
-    headers: { 'X-Auth-Token': API_KEY }
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
-}
+// ─────────────────────────────────────────────
+//  API  (TheSportsDB via Netlify function)
+// ─────────────────────────────────────────────
+let liveScores = {};
 
 async function loadFromAPI() {
-  if (API_KEY === '0badbb04d9b54a41a4b5ecfa650db3a1') {
-    document.getElementById('api-status').textContent = 'Sem chave API — usar dados locais';
-    document.getElementById('api-status').className = 'status-err';
-    return;
-  }
+  const statusEl = document.getElementById('api-status');
+  if (statusEl) { statusEl.className = 'status-loading'; statusEl.textContent = 'A ligar...'; }
   try {
-    document.getElementById('api-status').textContent = 'A ligar...';
-    document.getElementById('api-status').className = 'status-loading';
-
-    const [matchesData, standingsData] = await Promise.all([
-      fetchAPI(`competitions/${WC_ID}/matches`),
-      fetchAPI(`competitions/${WC_ID}/standings`)
-    ]);
-
-    apiMatches = matchesData.matches;
-    apiStandings = standingsData.standings;
-
-    const now = new Date();
-    document.getElementById('api-status').textContent = '✓ Conectado';
-    document.getElementById('api-status').className = 'status-ok';
-    document.getElementById('last-update').textContent = `Atualizado às ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-    document.getElementById('footer-update').textContent = `Dados atualizados: ${now.toLocaleString('pt-PT')}`;
+    const res = await fetch('/.netlify/functions/scores');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    liveScores = {};
+    (data.matches || []).forEach(m => {
+      const key = (m.homeTeam + ' vs ' + m.awayTeam).toLowerCase();
+      liveScores[key] = { home: m.homeScore, away: m.awayScore, status: m.status };
+    });
+    const count = data.count || 0;
+    if (statusEl) {
+      statusEl.className = 'status-ok';
+      statusEl.textContent = count > 0 ? '✅ ' + count + ' jogo(s)' : '✅ Atualizado';
+    }
   } catch(e) {
-    apiError = true;
-    document.getElementById('api-status').textContent = '⚠ API indisponível — dados locais';
-    document.getElementById('api-status').className = 'status-err';
+    if (statusEl) { statusEl.className = 'status-err'; statusEl.textContent = '❌ Erro'; }
     console.warn('API error:', e);
   }
   render();
 }
 
-// ═══════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââ
 //  RENDER
-// ═══════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââ
 function tvClass(t) {
   if (t==='RTP1') return 'tv-rtp'; if (t==='SIC') return 'tv-sic';
   if (t==='TVI') return 'tv-tvi'; if (t==='SPTV') return 'tv-sptv';
@@ -366,7 +352,7 @@ function isOpenTV(tvList) { return tvList.some(t => ['RTP1','SIC','TVI'].include
 
 function renderStandings() {
   if (!apiStandings) {
-    return `<div class="empty">📊<p>Classificação disponível após ligar a API.</p><p style="margin-top:0.5rem;font-size:0.7rem">Segue as instruções no ficheiro README.md</p></div>`;
+    return `<div class="empty">ð<p>ClassificaÃ§Ã£o disponÃ­vel apÃ³s ligar a API.</p><p style="margin-top:0.5rem;font-size:0.7rem">Segue as instruÃ§Ãµes no ficheiro README.md</p></div>`;
   }
   return apiStandings.map(group => {
     const rows = group.table.map((t, i) => `
@@ -421,7 +407,7 @@ function renderMatches() {
   if (currentFilter === 'hoje') filtered = matches.filter(m => m.date === TODAY_PT);
 
   if (filtered.length === 0) {
-    return `<div class="empty">⚽<p>Nenhum jogo encontrado para hoje.</p></div>`;
+    return `<div class="empty">â½<p>Nenhum jogo encontrado para hoje.</p></div>`;
   }
 
   const byDate = {};
@@ -435,18 +421,18 @@ function renderMatches() {
         const isLive = hasScore && m.score.live;
         return `
         <div class="match ${m.portugal ? 'portugal' : ''} ${isLive ? 'live-match' : ''}">
-          ${m.portugal ? '<span class="pt-flag">🇵🇹</span>' : ''}
+          ${m.portugal ? '<span class="pt-flag">ðµð¹</span>' : ''}
           <div class="match-time">
-            <div class="hour">${isLive ? '🔴' : m.time}</div>
+            <div class="hour">${isLive ? 'ð´' : m.time}</div>
             <div class="${isLive ? 'live-tag' : 'group-tag'}">${isLive ? 'AO VIVO' : 'Gr. '+m.group}</div>
           </div>
           <div class="match-teams">
             <div class="teams-row">
               ${m.home}
-              ${hasScore ? `<span class="score ${isLive ? 'live' : ''}">${m.score.home}–${m.score.away}</span>` : '<span style="color:var(--grey);font-weight:400;margin:0 0.3rem">vs</span>'}
+              ${hasScore ? `<span class="score ${isLive ? 'live' : ''}">${m.score.home}â${m.score.away}</span>` : '<span style="color:var(--grey);font-weight:400;margin:0 0.3rem">vs</span>'}
               ${m.away}
             </div>
-            <div class="city-row">📍 ${m.city} ${hasScore && !isLive ? '· <span style="color:rgba(100,255,150,0.7);font-size:0.65rem">FT</span>' : ''}</div>
+            <div class="city-row">ð ${m.city} ${hasScore && !isLive ? 'Â· <span style="color:rgba(100,255,150,0.7);font-size:0.65rem">FT</span>' : ''}</div>
           </div>
           <div class="match-right">
             ${m.tv.slice(0,2).map(t => `<span class="tv-badge ${tvClass(t)}">${t}</span>`).join('')}
@@ -483,47 +469,9 @@ function setFilter(f, el) {
   render();
 }
 
-// ═══════════════════════════════════════════
+// ─────────────────────────────────────────────
 //  INIT
-// ═══════════════════════════════════════════
-// ============================================
-  //  LIVE SCORES — TheSportsDB (free, no key)
-  // ============================================
-  let liveScores = {};
-  
-  async function loadFromAPI() {
-      try {
-      const today = new Date().toISOString().split('T')[0];
-            const res = await fetch(`/.netlify/functions/scores`);
-            if (!res.ok) return;
-            const json = await res.json();
-            const matches = json.matches || [];
-        
-            // Build a lookup: "HomeTeam vs AwayTeam" -> score info
-            liveScores = {};
-            matches.forEach(m => {
-                    const key = (m.strHomeTeam + ' vs ' + m.strAwayTeam).toLowerCase();
-          liveScores[key] = {
-                    home: m.intHomeScore,
-                    away: m.intAwayScore,
-                    status: m.strStatus // NS, 1H, HT, 2H, FT, etc
-          };
-            });
-        
-            // Update status indicator
-            const statusEl = document.querySelector('.api-status');
-                  if (statusEl) {
-                          const live = matches.filter(m => m.strStatus === '1H' || m.strStatus === '2H' || m.strStatus === 'HT');
-         statusEl.textContent = live.length > 0 ? `🔴 ${live.length} ao vivo` : `✅ Atualizado`;
-                          statusEl.style.color = live.length > 0 ? '#ef4444' : '#22c55e';
-                  }
-        
-            // Re-render to show scores
-            render();
-      } catch(e) {
-            console.warn('API error:', e.message);
-      }
-  }
+// ─────────────────────────────────────────────
   
   render(); // show local data immediately
 loadFromAPI(); // then try to enrich with live scores
