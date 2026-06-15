@@ -471,7 +471,46 @@ function setFilter(f, el) {
 // ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
-render(); // show local data immediately
+// ============================================
+  //  LIVE SCORES — TheSportsDB (free, no key)
+  // ============================================
+  let liveScores = {};
+  
+  async function loadFromAPI() {
+      try {
+      const today = new Date().toISOString().split('T')[0];
+            const res = await fetch(`/.netlify/functions/scores`);
+            if (!res.ok) return;
+            const json = await res.json();
+            const matches = json.matches || [];
+        
+            // Build a lookup: "HomeTeam vs AwayTeam" -> score info
+            liveScores = {};
+            matches.forEach(m => {
+                    const key = (m.strHomeTeam + ' vs ' + m.strAwayTeam).toLowerCase();
+          liveScores[key] = {
+                    home: m.intHomeScore,
+                    away: m.intAwayScore,
+                    status: m.strStatus // NS, 1H, HT, 2H, FT, etc
+          };
+            });
+        
+            // Update status indicator
+            const statusEl = document.querySelector('.api-status');
+                  if (statusEl) {
+                          const live = matches.filter(m => m.strStatus === '1H' || m.strStatus === '2H' || m.strStatus === 'HT');
+         statusEl.textContent = live.length > 0 ? `🔴 ${live.length} ao vivo` : `✅ Atualizado`;
+                          statusEl.style.color = live.length > 0 ? '#ef4444' : '#22c55e';
+                  }
+        
+            // Re-render to show scores
+            render();
+      } catch(e) {
+            console.warn('API error:', e.message);
+      }
+  }
+  
+  render(); // show local data immediately
 loadFromAPI(); // then try to enrich with live scores
 setInterval(loadFromAPI, 60000); // refresh every 60s
 </script>
