@@ -1,38 +1,46 @@
 const https = require('https');
 
-function get(url) {
-  return new Promise((resolve, reject) => {
-      https.get(url, (res) => {
-            let data = '';
+function get(url, headers) {
+    return new Promise((resolve, reject) => {
+          const options = {
+                  headers: headers || {}
+          };
+          https.get(url, options, (res) => {
+                  let data = '';
                   res.on('data', chunk => data += chunk);
-                        res.on('end', () => {
-                                try { resolve(JSON.parse(data)); }
-                                        catch(e) { reject(e); }
-                                              });
-                                                  }).on('error', reject);
-                                                    });
-                                                    }
+                  res.on('end', () => {
+                            try { resolve(JSON.parse(data)); }
+                            catch(e) { reject(new Error('Parse error: ' + data.substring(0, 200))); }
+                  });
+          }).on('error', reject);
+    });
+}
 
-                                                    exports.handler = async () => {
-                                                      try {
-                                                          const [games, groups] = await Promise.all([
-                                                                get('https://worldcup26.ir/get/games'),
-                                                                      get('https://worldcup26.ir/get/groups')
-                                                                          ]);
-                                                                              return {
-                                                                                    statusCode: 200,
-                                                                                          headers: {
-                                                                                                  'Content-Type': 'application/json',
-                                                                                                          'Access-Control-Allow-Origin': '*',
-                                                                                                                  'Cache-Control': 'public, max-age=60'
-                                                                                                                        },
-                                                                                                                              body: JSON.stringify({ games, groups })
-                                                                                                                                  };
-                                                                                                                                    } catch(e) {
-                                                                                                                                        return {
-                                                                                                                                              statusCode: 500,
-                                                                                                                                                    headers: { 'Access-Control-Allow-Origin': '*' },
-                                                                                                                                                          body: JSON.stringify({ error: e.message })
-                                                                                                                                                              };
-                                                                                                                                                                }
-                                                                                                                                                                };
+exports.handler = async () => {
+    try {
+          // football-data.org - free tier, no API key needed for basic access
+      const API_KEY = process.env.FOOTBALL_API_KEY || '';
+          const headers = API_KEY ? { 'X-Auth-Token': API_KEY } : {};
+
+      const data = await get(
+              'https://api.football-data.org/v4/competitions/WC2026/matches',
+              headers
+            );
+
+      return {
+              statusCode: 200,
+              headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Cache-Control': 'public, max-age=60'
+              },
+              body: JSON.stringify(data)
+      };
+    } catch(e) {
+          return {
+                  statusCode: 500,
+                  headers: { 'Access-Control-Allow-Origin': '*' },
+                  body: JSON.stringify({ error: e.message })
+          };
+    }
+};
