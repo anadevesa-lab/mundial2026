@@ -156,7 +156,7 @@
 //  CONFIG — coloca aqui a tua chave da API
 //  Registo grátis em: football-data.org/client/register
 // ═══════════════════════════════════════════
-const API_KEY = 'COLOCA_AQUI_A_TUA_CHAVE'; // substitui por ex: 'abc123def456...'
+const API_KEY = '0badbb04d9b54a41a4b5ecfa650db3a1'; // substitui por ex: 'abc123def456...'
 const WC_ID = 2000; // FIFA World Cup 2026 competition ID
 
 // ═══════════════════════════════════════════
@@ -308,7 +308,7 @@ async function fetchAPI(path) {
 }
 
 async function loadFromAPI() {
-  if (API_KEY === 'COLOCA_AQUI_A_TUA_CHAVE') {
+  if (API_KEY === '0badbb04d9b54a41a4b5ecfa650db3a1') {
     document.getElementById('api-status').textContent = 'Sem chave API — usar dados locais';
     document.getElementById('api-status').className = 'status-err';
     return;
