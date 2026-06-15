@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mundial 2026 🏆</title>
+<title>MatchZone26 🏆</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -119,13 +119,22 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .last-updated { text-align: center; font-size: 0.7rem; color: var(--grey); padding: 0.5rem; opacity: 0.6; }
+
+  /* TV LEGEND */
+  .tv-legend {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap; font-size: 0.72rem; color: var(--grey); justify-content: center;
+  }
+  .tv-legend-title { font-weight: 600; color: var(--grey); margin-right: 0.25rem; }
+  .tv-legend-item { display: flex; align-items: center; gap: 0.3rem; }
 </style>
 </head>
 <body>
 
 <header>
   <div class="trophy">🏆</div>
-  <h1>Mundial 2026</h1>
+  <h1>MatchZone26</h1>
   <p>11 Junho – 19 Julho · EUA, México & Canadá</p>
   <div class="live-indicator"><span class="live-dot"></span> Resultados ao vivo</div>
 </header>
@@ -143,6 +152,12 @@
   <button class="pill" onclick="setFilter('aberto',this)">📺 TV Aberta</button>
   <button class="pill" onclick="setFilter('classificacao',this)">📊 Classificação</button>
   <button class="pill" onclick="setFilter('eliminatoria',this)">⚔️ Eliminatórias</button>
+</div>
+
+<div class="tv-legend">
+  <span class="tv-legend-title">Legenda TV:</span>
+  <span class="tv-legend-item"><span class="tv-badge tv-lv">LV</span> Canal Aberto</span>
+  <span class="tv-legend-item"><span class="tv-badge tv-sptv">SPTV</span> Sport TV</span>
 </div>
 
 <main id="main">
