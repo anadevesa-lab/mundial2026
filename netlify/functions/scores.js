@@ -1,50 +1,66 @@
-                                                                      const https = require('https');
+const https = require('https');
 
-function get(url, headers) {
-          return new Promise((resolve, reject) => {
-                      const opts = new URL(url);
-                      const options = {
-                                    hostname: opts.hostname,
-                                    path: opts.pathname + opts.search,
-                                    method: 'GET',
-                                    headers: headers || {}
-                      };
-                      https.request(options, (res) => {
-                                    let data = '';
-                                    res.on('data', chunk => data += chunk);
-                                    res.on('end', () => {
-                                                    try { resolve(JSON.parse(data)); }
-                                                    catch(e) { reject(new Error('Parse error: ' + data.substring(0, 200))); }
-                                    });
-                      }).on('error', reject).end();
-          });
+function get(url) {
+  return new Promise((resolve, reject) => {
+    const opts = new URL(url);
+    const options = {
+      hostname: opts.hostname,
+      path: opts.pathname + opts.search,
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    };
+    https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch(e) { reject(new Error('Parse error: ' + data.substring(0, 200))); }
+      });
+    }).on('error', reject).end();
+  });
 }
 
-exports.handler = async () => {
-          try {
-                      const API_KEY = process.env.RAPIDAPI_KEY || '';
+exports.handler = async function(event, context) {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json'
+  };
 
-            const data = await get(
-                          'https://v3.football.api-sports.io/fixtures?league=1&season=2026',
-                    {
-                                    'x-apisports-key': API_KEY
-                    }
-                        );
+  try {
+    // TheSportsDB free API - no key required
+    const today = new Date().toISOString().split('T')[0];
+    const url = `https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${today}&s=Soccer`;
 
-            return {
-                          statusCode: 200,
-                          headers: {
-                                          'Content-Type': 'application/json',
-                                          'Access-Control-Allow-Origin': '*',
-                                          'Cache-Control': 'public, max-age=60'
-                          },
-                          body: JSON.stringify(data)
-            };
-          } catch(e) {
-                      return {
-                                    statusCode: 500,
-                                    headers: { 'Access-Control-Allow-Origin': '*' },
-                                    body: JSON.stringify({ error: e.message })
-                      };
-          }
+    const data = await get(url);
+    const events = data.events || [];
+
+    // Filter only FIFA World Cup matches
+    const wcMatches = events.filter(e =>
+      e.strLeague && e.strLeague.includes('FIFA World Cup')
+    );
+
+    const matches = wcMatches.map(e => ({
+      id: e.idEvent,
+      homeTeam: e.strHomeTeam,
+      awayTeam: e.strAwayTeam,
+      homeScore: e.intHomeScore,
+      awayScore: e.intAwayScore,
+      status: e.strStatus,
+      time: e.strTime,
+      date: e.dateEvent,
+      league: e.strLeague
+    }));
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ matches, count: matches.length, source: 'thesportsdb', date: today })
+    };
+  } catch (err) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: err.message, matches: [] })
+    };
+  }
 };
