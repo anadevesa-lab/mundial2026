@@ -1,0 +1,49 @@
+{
+  "name": "MatchZone26 - World Cup 2026 Live Scores",
+  "short_name": "MatchZone26",
+  "description": "Live scores, standings, and schedules for FIFA World Cup 2026",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#f5c842",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23f5c842' width='192' height='192'/><text x='50%' y='50%' font-size='120' text-anchor='middle' dominant-baseline='central'>⚽</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%23f5c842' width='512' height='512'/><text x='50%' y='50%' font-size='350' text-anchor='middle' dominant-baseline='central'>⚽</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%23000' width='540' height='720'/><text x='270' y='360' font-size='200' text-anchor='middle' dominant-baseline='central'>⚽</text></svg>",
+      "sizes": "540x720",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["sports"],
+  "shortcuts": [
+    {
+      "name": "Portugal Matches",
+      "short_name": "Portugal",
+      "description": "View Portugal's World Cup matches",
+      "url": "/?filter=portugal",
+      "icons": [{"src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='48' font-size='80' text-anchor='middle' dominant-baseline='central'>🇵🇹</text></svg>", "sizes": "96x96"}]
+    },
+    {
+      "name": "Standings",
+      "short_name": "Standings",
+      "description": "View group standings",
+      "url": "/?filter=standings",
+      "icons": [{"src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='48' font-size='80' text-anchor='middle' dominant-baseline='central'>📊</text></svg>", "sizes": "96x96"}]
+    }
+  ]
+}
