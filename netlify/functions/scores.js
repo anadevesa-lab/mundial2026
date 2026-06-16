@@ -105,11 +105,27 @@ exports.handler = async function(event, context) {
     try {
           // TheSportsDB free API - no key required
       const today = new Date().toISOString().split('T')[0];
-          const url = `https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${today}&s=Soccer`;
-
-      console.log(`📡 Fetching World Cup matches for ${today}...`);
-      const data = await get(url);
-          const events = data.events || [];
+      const tournamentStart = '2026-06-11';
+      
+      // Generate all dates from tournament start to today
+      const startDate = new Date(tournamentStart);
+      const endDate = new Date(today);
+      const dates = [];
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        dates.push(d.toISOString().split('T')[0]);
+      }
+      
+      console.log(`Fetching WC matches for ${dates.length} days (${dates[0]} to ${dates[dates.length-1]})...`);
+      
+      // Fetch all days in parallel
+      const allDataArrays = await Promise.all(
+        dates.map(date => {
+          const url = `https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${date}&s=Soccer`;
+          return get(url).catch(() => ({ events: [] }));
+        })
+      );
+      const allEvents = allDataArrays.flatMap(d => d.events || []);
+          const events = allEvents
 
       // Filter only FIFA World Cup matches
       const wcMatches = events.filter(e =>
