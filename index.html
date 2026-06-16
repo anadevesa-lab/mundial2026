@@ -350,26 +350,31 @@ function tvClass(t) {
 function isOpenTV(tvList) { return tvList.some(t => ['RTP1','SIC','TVI'].includes(t)); }
 
 function renderStandings() {
-  if (!apiStandings) {
-    return `<div class="empty">📊<p>Classificação disponível após ligar a API.</p><p style="margin-top:0.5rem;font-size:0.7rem">Segue as instruções no ficheiro README.md</p></div>`;
-  }
-  return apiStandings.map(group => {
-    const rows = group.table.map((t, i) => `
-      <div class="table-row ${i < 2 ? 'qualify' : ''}">
-        <span class="pos">${t.position}</span>
-        <span class="team-name">${t.team.shortName || t.team.name}</span>
-        <span class="num">${t.playedGames}</span>
-        <span class="num">${t.won}</span>
-        <span class="num">${t.draw}</span>
-        <span class="num">${t.lost}</span>
-        <span class="pts">${t.points}</span>
-      </div>`).join('');
-    return `
-      <div class="group-table">
-        <div class="group-header">Grupo ${group.group?.replace('GROUP_','') || ''}</div>
-        <div class="table-row header"><span></span><span>Equipa</span><span>J</span><span>V</span><span>E</span><span>D</span><span>Pts</span></div>
-        ${rows}
-      </div>`;
+  const table = {};
+  LOCAL_MATCHES.forEach(m => {
+    const g = m.group;
+    if (!table[g]) table[g] = {};
+    [m.home, m.away].forEach(t => {
+      if (!table[g][t]) table[g][t] = { name: t, j: 0, v: 0, e: 0, d: 0, gm: 0, gs: 0, pts: 0 };
+    });
+    const key = (m.home + ' vs ' + m.away).toLowerCase();
+    const score = liveScores[key];
+    if (score && score.home !== null && score.away !== null) {
+      const hg = parseInt(score.home) || 0, ag = parseInt(score.away) || 0;
+      table[g][m.home].j++; table[g][m.away].j++;
+      table[g][m.home].gm += hg; table[g][m.home].gs += ag;
+      table[g][m.away].gm += ag; table[g][m.away].gs += hg;
+      if (hg > ag) { table[g][m.home].v++; table[g][m.home].pts += 3; table[g][m.away].d++; }
+      else if (hg < ag) { table[g][m.away].v++; table[g][m.away].pts += 3; table[g][m.home].d++; }
+      else { table[g][m.home].e++; table[g][m.home].pts++; table[g][m.away].e++; table[g][m.away].pts++; }
+    }
+  });
+  const groups = Object.keys(table).sort();
+  if (!groups.length) return '<div class="empty"><p>Sem dados disponíveis.</p></div>';
+  return groups.map(g => {
+    const teams = Object.values(table[g]).sort((a, b) => b.pts - a.pts || (b.gm-b.gs)-(a.gm-a.gs) || b.gm - a.gm);
+    const rows = teams.map((t, i) => `<div class="table-row ${i < 2 ? 'qualify' : ''}"><span class="pos">${i+1}</span><span class="team-name">${t.name}</span><span class="num">${t.j}</span><span class="num">${t.v}</span><span class="num">${t.e}</span><span class="num">${t.d}</span><span class="pts">${t.pts}</span></div>`).join('');
+    return `<div class="group-table"><div class="group-header">Grupo ${g}</div><div class="table-row header"><span></span><span>Equipa</span><span>J</span><span>V</span><span>E</span><span>D</span><span>Pts</span></div>${rows}</div>`;
   }).join('');
 }
 
