@@ -5,13 +5,13 @@ const EN_TO_PT = {
     'Mexico': 'México',
     'South Africa': 'África do Sul',
     'South Korea': 'Coreia do Sul',
-    'Czechia': 'Chéquia',
-    'Czech Republic': 'Chéquia',
+    'Czechia': 'Rep. Checa',
+    'Czech Republic': 'Rep. Checa',
     'Canada': 'Canadá',
-    'Bosnia and Herzegovina': 'Bósnia e Herzegovina',
+    'Bosnia and Herzegovina': 'Bósnia-Herz.',
     'Bosnia-Herzegovina': 'Bósnia-Herz.',
-    'Bosnia & Herzegovina': 'Bósnia e Herzegovina',
-    'Qatar': 'Catar',
+    'Bosnia & Herzegovina': 'Bósnia-Herz.',
+    'Qatar': 'Qatar',
     'Switzerland': 'Suíça',
     'Brazil': 'Brasil',
     'Morocco': 'Marrocos',
@@ -34,7 +34,7 @@ const EN_TO_PT = {
     'Sweden': 'Suécia',
     'Tunisia': 'Tunísia',
     'Belgium': 'Bélgica',
-    'Egypt': 'Egito',
+    'Egypt': 'Egipto',
     'Iran': 'Irão',
     'New Zealand': 'Nova Zelândia',
     'Spain': 'Espanha',
@@ -58,11 +58,22 @@ const EN_TO_PT = {
     'Croatia': 'Croácia',
     'Ghana': 'Gana',
     'Panama': 'Panamá',
-    'Panama': 'Panamá',
 };
 
 function translateTeam(name) {
-    return EN_TO_PT[name] || name;
+    // Try exact match first
+    if (EN_TO_PT[name]) {
+        return EN_TO_PT[name];
+    }
+    // Try case-insensitive match
+    for (const [key, value] of Object.entries(EN_TO_PT)) {
+        if (key.toLowerCase() === name.toLowerCase()) {
+            return value;
+        }
+    }
+    // Return original if no match found
+    console.warn(`⚠️ Team name not found in mapping: "${name}"`);
+    return name;
 }
 
 function get(url) {
@@ -96,6 +107,7 @@ exports.handler = async function(event, context) {
       const today = new Date().toISOString().split('T')[0];
           const url = `https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${today}&s=Soccer`;
 
+      console.log(`📡 Fetching World Cup matches for ${today}...`);
       const data = await get(url);
           const events = data.events || [];
 
@@ -116,16 +128,35 @@ exports.handler = async function(event, context) {
               league: e.strLeague
       }));
 
+      console.log(`✅ Found ${matches.length} World Cup match(es) for ${today}`);
+      if (matches.length > 0) {
+          matches.forEach(m => {
+              console.log(`   🏟️  ${m.homeTeam} vs ${m.awayTeam} - ${m.status}`);
+          });
+      }
+
       return {
               statusCode: 200,
               headers,
-              body: JSON.stringify({ matches, count: matches.length, source: 'thesportsdb', date: today })
+              body: JSON.stringify({ 
+                  matches, 
+                  count: matches.length, 
+                  source: 'thesportsdb', 
+                  date: today,
+                  timestamp: new Date().toISOString()
+              })
       };
     } catch(e) {
+          console.error('❌ API Error:', e.message);
           return {
                   statusCode: 200,
                   headers,
-                  body: JSON.stringify({ matches: [], count: 0, error: e.message })
+                  body: JSON.stringify({ 
+                      matches: [], 
+                      count: 0, 
+                      error: e.message,
+                      timestamp: new Date().toISOString()
+                  })
           };
     }
 };
