@@ -152,34 +152,12 @@
   .match-actions {
     display: flex; gap: 0.5rem; align-items: center;
   }
-  .btn-small {
-    background: rgba(245,200,66,0.1); border: 1px solid rgba(245,200,66,0.3);
-    border-radius: 6px; padding: 0.3rem 0.6rem; cursor: pointer; font-size: 0.7rem;
-    color: var(--gold); transition: all 0.2s;
-  }
-  .btn-small:hover { background: rgba(245,200,66,0.2); }
 
   .notification-badge {
     display: inline-block; width: 12px; height: 12px; background: #6ee7b7;
     border-radius: 50%; margin-left: 0.3rem; animation: pulse 1.5s infinite;
   }
 
-  /* MODAL */
-  .modal {
-    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
-  }
-  .modal.active { display: flex; }
-  .modal-content {
-    background: var(--card-bg); border-radius: 12px; padding: 2rem; max-width: 400px;
-    width: 90%; position: relative; animation: slideIn 0.3s;
-  }
-  @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .modal-close {
-    position: absolute; top: 1rem; right: 1rem; background: none; border: none;
-    color: var(--grey); cursor: pointer; font-size: 1.5rem;
-  }
-  .modal-close:hover { color: var(--white); }
 
   /* RESPONSIVE */
   @media (max-width: 640px) {
@@ -226,14 +204,6 @@
 <div class="last-updated" id="footer-update"></div>
 
 <!-- MODAL SHARE -->
-<div class="modal" id="shareModal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h3 style="color: var(--gold); margin-bottom: 1rem;">Partilhar Jogo</h3>
-    <textarea id="shareText" readonly style="width: 100%; height: 100px; padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--pitch-light); color: var(--white); font-size: 0.8rem; font-family: monospace; resize: none;"></textarea>
-    <button onclick="copyToClipboard()" style="width: 100%; margin-top: 1rem; padding: 0.5rem; background: var(--gold); color: var(--dark); border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Copiar</button>
-  </div>
-</div>
 
 <script>
 // ═══════════════════════════════════════════
@@ -478,22 +448,8 @@ async function loadFromAPI() {
 // ═══════════════════════════════════════════
 //  MODAL & SHARE
 // ═══════════════════════════════════════════
-function closeModal() {
-  document.getElementById('shareModal').classList.remove('active');
-}
 
-function shareMatch(homeTeam, awayTeam, time, city) {
-  const text = `⚽ ${homeTeam} vs ${awayTeam}\n🕐 ${time}\n📍 ${city}`;
-  document.getElementById('shareText').value = text;
-  document.getElementById('shareModal').classList.add('active');
-}
 
-function copyToClipboard() {
-  const textarea = document.getElementById('shareText');
-  textarea.select();
-  document.execCommand('copy');
-  alert('Copiado para a área de transferência!');
-}
 
 // ═══════════════════════════════════════════
 //  RENDER
@@ -578,7 +534,6 @@ function renderMatches() {
           <div class="match-right">
             <div class="match-actions">
               ${m.tv.slice(0,2).map(t => `<span class="tv-badge ${tvClass(t)}">${t}</span>`).join('')}
-              <button class="btn-small" onclick="shareMatch('${m.home}','${m.away}','${m.time}','${m.city}')" title="Partilhar">📤</button>
             </div>
           </div>
         </div>`;
