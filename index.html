@@ -528,7 +528,9 @@ function renderStandings() {
   });
   const groups = Object.keys(table).sort();
   if (!groups.length) return '<div class="empty"><p>Sem dados disponíveis.</p></div>';
-  return groups.map(g => {
+  const noApiData = Object.keys(liveScores).length === 0;
+  const warning = noApiData ? '<div style="text-align:center;padding:0.75rem;background:rgba(245,200,66,0.1);border-radius:8px;margin-bottom:1rem;font-size:0.8rem;color:var(--gold)">⚠️ A aguardar dados da API — classificação disponível em breve</div>' : '';
+  return warning + groups.map(g => {
     const teams = Object.values(table[g]).sort((a, b) => b.pts - a.pts || (b.gm-b.gs)-(a.gm-a.gs) || b.gm - a.gm);
     const rows = teams.map((t, i) => `<div class="table-row ${i < 2 ? 'qualify' : ''}"><span class="pos">${i+1}</span><span class="team-name">${t.name}</span><span class="num">${t.j}</span><span class="num">${t.v}</span><span class="num">${t.e}</span><span class="num">${t.d}</span><span class="pts">${t.pts}</span></div>`);
     return `<div class="group-table"><div class="group-header">Grupo ${g}</div><div class="table-row header"><span></span><span>Equipa</span><span>J</span><span>V</span><span>E</span><span>D</span><span>Pts</span></div>${rows.join('')}</div>`;
